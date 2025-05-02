@@ -1,5 +1,10 @@
 package IntList;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class IntListExercises {
 
     /**
@@ -10,7 +15,7 @@ public class IntListExercises {
      */
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
-        while (head.rest != null) {
+        while (head != null) {
             head.first += c;
             head = head.rest;
         }
@@ -26,7 +31,10 @@ public class IntListExercises {
     public static void setToZeroIfMaxFEL(IntList L) {
         IntList p = L;
         while (p != null) {
-            if (firstDigitEqualsLastDigit(max(p))) {
+            int currentMax = max(p);
+            boolean firstEqualsLast = firstDigitEqualsLastDigit(currentMax);
+            if(firstEqualsLast)
+            {
                 p.first = 0;
             }
             p = p.rest;
@@ -51,7 +59,7 @@ public class IntListExercises {
      */
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
-        while (x > 10) {
+        while (x >= 10) {
             x = x / 10;
         }
         int firstDigit = x % 10;
@@ -77,6 +85,18 @@ public class IntListExercises {
             lst.first *= lst.first;
         }
 
-        return currElemIsPrime || squarePrimes(lst.rest);
+        squarePrimes(lst.rest);
+
+        return currElemIsPrime;
+    }
+
+    @Test
+    public void testsquarePrimes()
+    {
+        IntList lst = IntList.of(13, 15, 16, 17, 18);
+        boolean changed = IntListExercises.squarePrimes(lst);
+        assertEquals("169 -> 15 -> 16 -> 289 -> 18", lst.toString());
+        assertTrue(changed);
     }
 }
+
