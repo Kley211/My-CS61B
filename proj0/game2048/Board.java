@@ -18,6 +18,7 @@ public class Board implements Iterable<Tile> {
 
     public Board(int size) {
         values = new Tile[size][size];
+
         viewPerspective = Side.NORTH;
     }
 

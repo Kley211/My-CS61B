@@ -33,15 +33,16 @@ public class IntListExercises {
         while (p != null) {
             int currentMax = max(p);
             boolean firstEqualsLast = firstDigitEqualsLastDigit(currentMax);
-            if(firstEqualsLast)
-            {
+            if (firstEqualsLast) {
                 p.first = 0;
             }
             p = p.rest;
         }
     }
 
-    /** Returns the max value in the IntList starting at L. */
+    /**
+     * Returns the max value in the IntList starting at L.
+     */
     public static int max(IntList L) {
         int max = L.first;
         IntList p = L.rest;
@@ -54,8 +55,9 @@ public class IntListExercises {
         return max;
     }
 
-    /** Returns true if the last digit of x is equal to
-     *  the first digit of x.
+    /**
+     * Returns true if the last digit of x is equal to
+     * the first digit of x.
      */
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
@@ -73,30 +75,20 @@ public class IntListExercises {
      * @param lst IntList from Lecture
      * @return True if there was an update to the list
      */
-    public static boolean squarePrimes(IntList lst) {
+    public static boolean squarePrimes(IntList lst, boolean changed) {
         // Base Case: we have reached the end of the list
         if (lst == null) {
-            return false;
+            return changed;
         }
 
         boolean currElemIsPrime = Primes.isPrime(lst.first);
 
         if (currElemIsPrime) {
             lst.first *= lst.first;
+            changed = true;
         }
 
-        squarePrimes(lst.rest);
-
-        return currElemIsPrime;
-    }
-
-    @Test
-    public void testsquarePrimes()
-    {
-        IntList lst = IntList.of(13, 15, 16, 17, 18);
-        boolean changed = IntListExercises.squarePrimes(lst);
-        assertEquals("169 -> 15 -> 16 -> 289 -> 18", lst.toString());
-        assertTrue(changed);
+        return squarePrimes(lst.rest, changed);
     }
 }
 

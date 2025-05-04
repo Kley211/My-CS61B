@@ -114,6 +114,58 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        int size = board.size();
+        board.setViewingPerspective(side);
+        for(int col = 0; col < size; col++)
+        {
+            boolean merged = false;
+            boolean hasPredecessor = false;
+            int destination = size - 1;
+
+            for(int row = size - 1;row >= 0; row--)
+            {
+                if(board.tile(col,row) == null)
+                {
+                    continue;
+                }
+
+                else if(row == destination)
+                {
+                    hasPredecessor = true;
+                    continue;
+                }
+
+                else if(board.tile(col,destination) != null)
+                {
+                    if(board.tile(col,destination).value() != board.tile(col,row).value())
+                    {
+                        destination -= 1;
+                        if(row < destination)
+                        {
+                            merged = board.move(col,destination,board.tile(col,row));
+                            changed = true;
+                        }
+                        hasPredecessor = true;
+                        continue;
+                    }
+                }
+
+                merged = board.move(col,destination,board.tile(col,row));
+                changed = true;
+                if(merged)
+                {
+                    score += board.tile(col,destination).value();
+                    hasPredecessor =false;
+                    destination -= 1;
+                }
+                else
+                {
+                    hasPredecessor = true;
+                }
+            }
+        }
+        board.setViewingPerspective(Side.NORTH);
+
         checkGameOver();
         if (changed) {
             setChanged();
@@ -138,6 +190,16 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+    for(int i = 0; i < b.size();i++)
+    {
+        for(int j = 0; j < b.size();j++)
+        {
+            if(b.tile(i,j) == null)
+            {
+                return true;
+            }
+        }
+    }
         return false;
     }
 
@@ -148,6 +210,21 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for(int i = 0; i < b.size(); i++)
+        {
+            for(int j = 0;j < b.size();j++)
+            {
+                if(b.tile(i,j) != null && b.tile(i,j).next() != null )
+                {
+                    Tile x = b.tile(i, j).next();
+                    if (x.value() == MAX_PIECE)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 
@@ -159,6 +236,31 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b))
+        {
+            return true;
+        }
+        //遍历所有可能的右方相邻的方块
+        for (int i = 0; i < b.size(); i++) {
+            for (int j = 0; j < b.size() - 1; j++) {
+                Tile current = b.tile(i, j);
+                Tile right = b.tile(i, j + 1);
+                if (current.value() == right.value()) {
+                    return true;
+                }
+            }
+        }
+
+        // 遍历所有可能的下方相邻方块
+        for (int i = 0; i < b.size() - 1; i++) {
+            for (int j = 0; j < b.size(); j++) {
+                Tile current = b.tile(i, j);
+                Tile below = b.tile(i + 1, j);
+                if (current.value() == below.value()) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
