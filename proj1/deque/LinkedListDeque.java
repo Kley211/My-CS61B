@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class LinkedListDeque<T> implements Deque<T>
 {
+    //as a unit for processing
     public class Node
     {
         public T item;
@@ -23,6 +24,7 @@ public class LinkedListDeque<T> implements Deque<T>
     private int size;
     private Node sentinel;
 
+    //No-argument constructor
     public LinkedListDeque()
     {
         size = 0;
@@ -31,6 +33,7 @@ public class LinkedListDeque<T> implements Deque<T>
         sentinel.next = sentinel;
     }
 
+    //创建一个结点，其前指向哨兵，后指向原哨兵的后面，修改哨兵和其后面结点的指向
     @Override
     public void addFirst(T item)
     {
@@ -40,6 +43,7 @@ public class LinkedListDeque<T> implements Deque<T>
         size += 1;
     }
 
+    //思路同上
     @Override
     public void addLast(T item)
     {
@@ -67,7 +71,7 @@ public class LinkedListDeque<T> implements Deque<T>
         System.out.print(")");
         System.out.println();
     }
-
+    //修改First,sentinel,First.next的指向，将First从队列中剔除
     @Override
     public T removeFirst()
     {
@@ -99,6 +103,7 @@ public class LinkedListDeque<T> implements Deque<T>
         return removeitem;
     }
 
+    //迭代得到index处的数据，注意范围
     @Override
     public T get(int index)
     {
@@ -114,12 +119,9 @@ public class LinkedListDeque<T> implements Deque<T>
         return iterate.item;
     }
 
-    public Iterator<T> iterator()
-    {
-        return new LinkedListDequeIterator();
-    }
 
 
+    //辅助方法，是实现递归获取的具体方法，但不暴露给外部
     private T getRecursive(Node start, int index) {
         if (index == 0) {
             return start.item;
@@ -128,6 +130,7 @@ public class LinkedListDeque<T> implements Deque<T>
         }
     }
 
+    //外界可见的递归获取方法，只处理边界情况，一般情况交给内部方法处理，
     public T getRecursive(int index) {
         if (index > size - 1) {
             return null;
@@ -135,7 +138,13 @@ public class LinkedListDeque<T> implements Deque<T>
         return getRecursive(sentinel.next, index);
     }
 
+    public Iterator<T> iterator()
+    {
+        return new LinkedListDequeIterator();
+    }
+
     //why LinkedListDequeIterator haven't <T>???
+    //because this class is a subclass,it inherits LinkedListDeque's <T>，if you write<T>,it will override previous <T>.
     public class LinkedListDequeIterator implements Iterator<T>
     {
         private int i;
